@@ -1,4 +1,20 @@
-# Quick Start - New Ubuntu VM
+# Install git if needed
+sudo apt update
+sudo apt install -y git
+
+# Clone your repository
+git clone https://github.com/johndoezer0day/ubuntu-scripts.git
+
+# Enter the folder
+cd ubuntu-scripts
+
+# Make scripts executable
+chmod +x *.sh
+
+# Run bootstrap
+sudo ./ubuntu-vm-bootstrap.sh
+
+---------------------# Quick Start - New Ubuntu VM
 
 ## 1. Login
 
@@ -30,7 +46,7 @@ server-health-check.sh
 
 ## 4. Make Scripts Executable
 
-```bash
+```bash--------------------------------
 chmod +x *.sh
 ```
 
