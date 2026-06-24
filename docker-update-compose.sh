@@ -3,7 +3,7 @@ set -e
 
 if [ -z "$1" ]; then
   echo "Usage: ./docker-update-compose.sh /path/to/compose/folder"
-  echo "Example: ./docker-update-compose.sh /opt/stacks/finance-app"
+  echo "Example: ./docker-update-compose.sh /opt/stacks/application-name"
   exit 1
 fi
 

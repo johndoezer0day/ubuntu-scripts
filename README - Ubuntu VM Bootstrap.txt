@@ -58,7 +58,7 @@ DNS Servers
 Example:
 
 ```txt
-finance-app
+application-name
 192.168.1.50/24
 192.168.1.1
 192.168.1.10,1.1.1.1
@@ -127,11 +127,11 @@ Docker Cleanup:
 Update Docker Stack:
 
 ```bash
-./docker-update-compose.sh /opt/stacks/finance-app
+./docker-update-compose.sh /opt/stacks/application-name
 ```
 
 Backup Docker Stack:
 
 ```bash
-./backup-compose-stack.sh /opt/stacks/finance-app
+./backup-compose-stack.sh /opt/stacks/application-name
 ```

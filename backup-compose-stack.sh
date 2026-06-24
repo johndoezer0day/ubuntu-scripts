@@ -3,7 +3,7 @@ set -e
 
 if [ -z "$1" ]; then
   echo "Usage: ./backup-compose-stack.sh /path/to/compose/folder"
-  echo "Example: ./backup-compose-stack.sh /opt/stacks/finance-app"
+  echo "Example: ./backup-compose-stack.sh /opt/stacks/application-name"
   exit 1
 fi
 
