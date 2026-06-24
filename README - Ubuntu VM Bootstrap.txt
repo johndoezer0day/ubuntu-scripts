@@ -1,39 +1,41 @@
+------------------------------------------------------------------------------------------------------
 # Install git if needed
 sudo apt update
 sudo apt install -y git
 
 # Clone your repository
 git clone https://github.com/johndoezer0day/ubuntu-scripts.git
+------------------------------------------------------------------------------------------------------
 
-# Enter the folder
-cd ubuntu-scripts
 
-# Make scripts executable
-chmod +x *.sh
+# Ubuntu VM Bootstrap Toolkit
 
-# Run bootstrap
-sudo ./ubuntu-vm-bootstrap.sh
+Automated Ubuntu Server bootstrap process for homelab, development, Docker, and application servers.
 
----------------------# Quick Start - New Ubuntu VM
+---
 
-## 1. Login
+# Features
 
-SSH to the new VM:
+The bootstrap script automatically:
 
-```bash
-ssh username@ip-address
-```
+* Sets hostname
+* Configures static IP address
+* Configures DNS servers
+* Installs Docker Engine
+* Installs Docker Compose
+* Installs common admin tools
+* Configures UFW firewall
+* Restricts SSH access to your LAN
+* Optionally enables RDP access
+* Creates standard folder structure
+* Validates networking and DNS
+* Optionally disables unnecessary services
+* Optionally cleans cloned Docker containers
+* Reboots automatically
 
-## 2. Create Scripts Folder
+---
 
-```bash
-mkdir -p ~/ubuntu-scripts
-cd ~/ubuntu-scripts
-```
-
-## 3. Copy Scripts
-
-Copy the following files into the folder:
+# Included Files
 
 ```txt
 ubuntu-vm-bootstrap.sh
@@ -42,11 +44,49 @@ docker-cleanup.sh
 docker-update-compose.sh
 backup-compose-stack.sh
 server-health-check.sh
+README.md
 ```
 
-## 4. Make Scripts Executable
+---
 
-```bash--------------------------------
+# Quick Start
+
+## 1. Login to New VM
+
+```bash
+ssh username@ip-address
+```
+
+---
+
+## 2. Install Git
+
+```bash
+sudo apt update
+sudo apt install -y git
+```
+
+---
+
+## 3. Clone Repository
+
+```bash
+git clone https://github.com/johndoezer0day/ubuntu-scripts.git
+```
+
+---
+
+## 4. Enter Repository
+
+```bash
+cd ubuntu-scripts
+```
+
+---
+
+## 5. Make Scripts Executable
+
+```bash
 chmod +x *.sh
 ```
 
@@ -56,11 +96,17 @@ Verify:
 ls -lah
 ```
 
-## 5. Run Bootstrap
+---
+
+## 6. Run Bootstrap
 
 ```bash
 sudo ./ubuntu-vm-bootstrap.sh
 ```
+
+---
+
+# Bootstrap Questions
 
 The script will ask for:
 
@@ -69,85 +115,255 @@ Hostname
 Static IP
 Gateway
 DNS Servers
+SSH Allowed Subnet
+Enable RDP
+Disable Avahi/CUPS
+Clean Docker Containers
 ```
 
 Example:
 
 ```txt
-application-name
-192.168.1.50/24
-192.168.1.1
-192.168.1.10,1.1.1.1
+Hostname:
+finance-appdev1
+
+Static IP:
+192.x.x.X/24
+
+Gateway:
+192.x.x.1
+
+DNS Servers:
+192.x.x.x,1.1.1.1
+
+SSH Allowed Subnet:
+192.x.x.x/24
+
+Enable RDP:
+y
+
+Disable Avahi/CUPS:
+y
+
+Clean Docker Containers:
+y
 ```
 
-## 6. Wait For Reboot
+---
 
-The VM will reboot automatically.
-
-## 7. Reconnect
+# Reconnect After Reboot
 
 ```bash
 ssh username@new-ip-address
 ```
 
-## 8. Verify Installation
+---
+
+# Post Bootstrap Validation
+
+Verify hostname:
 
 ```bash
-hostname
+hostnamectl
+```
 
-ip a
+Verify networking:
 
+```bash
+ip -br a
+```
+
+Verify DNS:
+
+```bash
+ping google.com
+```
+
+Verify internet:
+
+```bash
+ping 1.1.1.1
+```
+
+Verify updates:
+
+```bash
+sudo apt update
+sudo apt list --upgradable
+```
+
+Verify Docker:
+
+```bash
 docker --version
-
 docker compose version
 ```
 
-## 9. Run Health Check
+Verify Docker functionality:
 
 ```bash
-cd ~/ubuntu-scripts
-
-./server-health-check.sh
+docker run hello-world
 ```
 
-## 10. Create Standard Project Folder
+Verify firewall:
 
 ```bash
-sudo mkdir -p /opt/stacks
-sudo mkdir -p /opt/backups
-
-sudo chown -R $USER:$USER /opt/stacks
-sudo chown -R $USER:$USER /opt/backups
+sudo ufw status numbered
 ```
 
-## Common Commands
+Verify listening ports:
 
-Update Server:
+```bash
+sudo ss -tulpn
+```
+
+---
+
+# Standard Folder Structure
+
+The bootstrap script automatically creates:
+
+```txt
+/opt
+├── backups
+├── logs
+├── scripts
+└── stacks
+```
+
+Recommended application layout:
+
+```txt
+/opt/stacks
+└── application-name
+    ├── app
+    ├── backups
+    ├── data
+    ├── docker-compose.yml
+    └── .env
+```
+
+Example:
+
+```txt
+/opt/stacks/application-name
+├── app
+├── backups
+├── data
+├── docker-compose.yml
+└── .env
+```
+
+---
+
+# Security Baseline
+
+Recommended firewall result:
+
+```txt
+22/tcp   SSH   LAN only
+3389/tcp RDP   LAN only (optional)
+```
+
+All other inbound ports should remain blocked until required.
+
+Examples:
+
+```bash
+sudo ufw status numbered
+```
+
+```txt
+22/tcp   ALLOW IN 192.x.x.x/24
+3389/tcp ALLOW IN 192.x.x.x/24
+```
+
+---
+
+# VM Snapshot Recommendation
+
+After validation:
+
+1. Confirm updates completed
+2. Confirm Docker works
+3. Confirm firewall rules
+4. Confirm DNS resolution
+
+Create a VM snapshot:
+
+```txt
+Server-Baseline
+```
+
+Examples:
+
+```txt
+Finance-App-Secure-Baseline
+Docker-Host-Baseline
+Ubuntu-App-Server-Baseline
+```
+
+---
+
+# Common Commands
+
+## Update Server
 
 ```bash
 ./update-server.sh
 ```
 
-Health Check:
+---
+
+## Health Check
 
 ```bash
 ./server-health-check.sh
 ```
 
-Docker Cleanup:
+---
+
+## Docker Cleanup
 
 ```bash
 ./docker-cleanup.sh
 ```
 
-Update Docker Stack:
+---
+
+## Update Docker Stack
 
 ```bash
 ./docker-update-compose.sh /opt/stacks/application-name
 ```
 
-Backup Docker Stack:
+Example:
+
+```bash
+./docker-update-compose.sh /opt/stacks/application-name
+```
+
+---
+
+## Backup Docker Stack
 
 ```bash
 ./backup-compose-stack.sh /opt/stacks/application-name
 ```
+
+Example:
+
+```bash
+./backup-compose-stack.sh /opt/stacks/application-name
+```
+
+---
+
+# Notes
+
+* GitHub access requires outbound internet only.
+* SSH should be restricted to trusted networks.
+* DNS should always include a backup resolver.
+* Take a VM snapshot before deploying production applications.
+* Keep application data outside containers using Docker volumes.
+* Store secrets in `.env` files and never commit them to GitHub.
